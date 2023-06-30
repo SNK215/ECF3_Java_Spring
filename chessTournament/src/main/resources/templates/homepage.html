@@ -10,12 +10,17 @@
 </head>
 <body>
 <div th:replace="~{fragments/header.html::header}"></div>
-<div class="d-flex flex-column justify-content-center text-center">
+<div class="d-flex flex-column align-items-center text-center">
     <h1>Bienvenue sur ChessManager !</h1>
     <h3 th:text="${isLogged ? 'Vous êtes connecté' : 'Vous êtes déconnecté'}"></h3>
-    <p class="my-2 px-5">Grâce à l'application ChessManager vous pouvez suivre votre parcours dans le tournoi d'échec.
-    Vous pouvez ici voir vos matchs à venir et les résultats de vos matchs passés ainsi que votre position au classement général.
-    Veuillez contacter un administrateur pour programmer de nouveaux matchs.</p>
+    <p class="my-2 px-5 w-50">Grâce à l'application ChessManager vous pouvez suivre votre parcours dans le tournoi d'échec.
+    Vous pouvez ici voir vos matchs à venir et les résultats de vos matchs passés ainsi que votre position au classement général.</p>
+    <p>Veuillez contacter un administrateur pour programmer de nouveaux matchs.</p>
+    <ul>
+        <li>Victoire = 2 points</li>
+        <li>Défaite = 0 points</li>
+        <li>Match nul = 1 point</li>
+    </ul>
 </div>
 </body>
 </html>

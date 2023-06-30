@@ -16,28 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `game`
+-- Table structure for table `game_user_list`
 --
 
-DROP TABLE IF EXISTS `game`;
+DROP TABLE IF EXISTS `game_user_list`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `game` (
-  `has_been_played` bit(1) NOT NULL,
-  `id` int NOT NULL AUTO_INCREMENT,
-  `result` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `game_user_list` (
+  `game_id` int NOT NULL,
+  `user_list_id` int NOT NULL,
+  KEY `FKoix57r6opt7ark6qclv2wtgxx` (`user_list_id`),
+  KEY `FKa4tn7s7wvv3knlcq17v3dhml6` (`game_id`),
+  CONSTRAINT `FKa4tn7s7wvv3knlcq17v3dhml6` FOREIGN KEY (`game_id`) REFERENCES `game` (`id`),
+  CONSTRAINT `FKoix57r6opt7ark6qclv2wtgxx` FOREIGN KEY (`user_list_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `game`
+-- Dumping data for table `game_user_list`
 --
 
-LOCK TABLES `game` WRITE;
-/*!40000 ALTER TABLE `game` DISABLE KEYS */;
-INSERT INTO `game` VALUES (_binary '',1,'B'),(_binary '',2,'N'),(_binary '\0',3,''),(_binary '\0',4,'');
-/*!40000 ALTER TABLE `game` ENABLE KEYS */;
+LOCK TABLES `game_user_list` WRITE;
+/*!40000 ALTER TABLE `game_user_list` DISABLE KEYS */;
+INSERT INTO `game_user_list` VALUES (1,2),(1,3),(2,1),(2,2),(3,2),(3,3),(4,2),(4,1);
+/*!40000 ALTER TABLE `game_user_list` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -49,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-30 10:28:01
+-- Dump completed on 2023-06-30 16:40:31

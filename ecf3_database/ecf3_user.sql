@@ -16,29 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `user_game_list`
+-- Table structure for table `user`
 --
 
-DROP TABLE IF EXISTS `user_game_list`;
+DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user_game_list` (
-  `game_list_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  KEY `FK6o681mqt757jto6afrbx9637g` (`game_list_id`),
-  KEY `FKevib3sidwicjerk22l6m3gmj9` (`user_id`),
-  CONSTRAINT `FK6o681mqt757jto6afrbx9637g` FOREIGN KEY (`game_list_id`) REFERENCES `game` (`id`),
-  CONSTRAINT `FKevib3sidwicjerk22l6m3gmj9` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `user` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `is_admin` bit(1) NOT NULL,
+  `score` int NOT NULL,
+  `firstname` varchar(255) DEFAULT NULL,
+  `lastname` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user_game_list`
+-- Dumping data for table `user`
 --
 
-LOCK TABLES `user_game_list` WRITE;
-/*!40000 ALTER TABLE `user_game_list` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_game_list` ENABLE KEYS */;
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,_binary '',1,'admin','admin','admin','admin'),(2,_binary '\0',5,'Jean','Dupond','123','JeanD'),(3,_binary '\0',2,'Richard','James','123','RichardD');
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-30 10:28:01
+-- Dump completed on 2023-06-30 16:40:31
