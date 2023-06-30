@@ -1,4 +1,4 @@
-package ECF3.chessTournament.Exception;
+package ECF3.chessTournament.exception;
 
 public class GameUnknownException extends Exception{
     public GameUnknownException() {

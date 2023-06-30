@@ -1,4 +1,4 @@
-package ECF3.chessTournament.Service;
+package ECF3.chessTournament.service;
 
 import ECF3.chessTournament.entity.User;
 

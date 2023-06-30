@@ -41,6 +41,7 @@
 </div>
 
 <div class="d-flex flex-column justify-content-center align-items-center">
+    <h1 class="text-center">Mes parties non jouées</h1>
     <div th:each="game : ${gameList}" class="border border-dark rounded m-3 p-3 w-50">
         <div class="d-flex flex-row justify-content-center">
             <span class="h4" th:text="${'Partie N°'+game.getId()+' : '}"></span>

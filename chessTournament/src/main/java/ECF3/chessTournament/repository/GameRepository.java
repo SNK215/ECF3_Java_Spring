@@ -1,4 +1,4 @@
-package ECF3.chessTournament.Repository;
+package ECF3.chessTournament.repository;
 
 import ECF3.chessTournament.entity.Game;
 import ECF3.chessTournament.entity.User;

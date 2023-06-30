@@ -1,9 +1,9 @@
-package ECF3.chessTournament.Service;
+package ECF3.chessTournament.service;
 
-import ECF3.chessTournament.Exception.NotLoggedInException;
-import ECF3.chessTournament.Exception.UserExistsException;
-import ECF3.chessTournament.Exception.UserUnknownException;
-import ECF3.chessTournament.Repository.UserRepository;
+import ECF3.chessTournament.exception.NotLoggedInException;
+import ECF3.chessTournament.exception.UserExistsException;
+import ECF3.chessTournament.exception.UserUnknownException;
+import ECF3.chessTournament.repository.UserRepository;
 import ECF3.chessTournament.entity.Game;
 import ECF3.chessTournament.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -24,10 +23,10 @@ public class UserService {
     LoginService loginService;
 
     public boolean register(String firstname, String lastname, String username, String password, boolean isAdmin, List<Game> gameList) throws UserExistsException {
-        try {
-            userRepository.findByUsername(username);
+        if (userRepository.findByUsername(username) != null) {
             throw new UserExistsException();
-        } catch (Exception e) {
+        }
+        else {
             User user = new User(firstname, lastname, username, password, isAdmin, gameList);
             userRepository.save(user);
             return user.getId() > 0;
@@ -37,7 +36,12 @@ public class UserService {
     public boolean logIn(String username, String password) throws UserUnknownException {
         try {
             User user = userRepository.findByUsernameAndPassword(username, password);
-            return loginService.login(user);
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                return loginService.login(user);
+            }
+            else {
+                return false;
+            }
         } catch (Exception e) {
             throw new UserUnknownException();
         }
@@ -73,11 +77,13 @@ public class UserService {
         throw new NotLoggedInException();
     }
 
-    public List<User> findAllOrderdByScore() throws NotLoggedInException {
-        List<User> userList = findAll();
-        Collections.sort(userList, Comparator.comparingInt(User::getScore).reversed());
-
-        return userList;
+    public List<User> findAllOrderByScore() throws NotLoggedInException {
+        if (loginService.isLogged()) {
+            List<User> userList = findAll();
+            Collections.sort(userList, Comparator.comparingInt(User::getScore).reversed());
+            return userList;
+        }
+        throw new NotLoggedInException();
     }
 
 }

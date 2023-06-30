@@ -11,31 +11,35 @@
 <body>
     <div th:replace="~{fragments/header.html :: header}"></div>
 
-    <h1>Inscription</h1>
 
-    <form method="post" th:action="@{/home/registerAction}">
-        <div class="form-group">
-            <label for="firstname">Prénom</label>
-            <input type="text" class="form-control" id="firstname" name="firstname">
-        </div>
+    <div class="d-flex justify-content-center">
+        <form class="d-flex flex-column justify-content-center w-25" method="post" th:action="@{/home/registerAction}">
+            <h1 class="text-center">Inscription</h1>
+            <div class="form-group">
+                <label for="firstname">Prénom</label>
+                <input type="text" class="form-control" id="firstname" name="firstname" autocomplete="off" required>
+            </div>
 
-        <div class="form-group">
-            <label for="lastname">Nom de famille</label>
-            <input type="text" class="form-control" id="lastname" name="lastname">
-        </div>
+            <div class="form-group">
+                <label for="lastname">Nom de famille</label>
+                <input type="text" class="form-control" id="lastname" name="lastname" autocomplete="off" required>
+            </div>
 
-        <div class="form-group">
-            <label for="username">Nom d'utilisateur</label>
-            <input type="text" class="form-control" id="username" name="username">
-        </div>
+            <div class="form-group">
+                <label for="username">Nom d'utilisateur</label>
+                <input type="text" class="form-control" id="username" name="username" minlength="3" autocomplete="off" required>
+                <small id="usernameHelp" class="form-text text-muted">3 caractères minimum</small>
+            </div>
 
-        <div class="form-group">
-            <label for="password">Mot de passe</label>
-            <input type="password" class="form-control" id="password" name="password">
-        </div>
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" class="form-control" id="password" name="password" minlength="8" required>
+                <small id="passwordHelp" class="form-text text-muted">8 caractères minimum</small>
+            </div>
 
-        <button type="submit" class="btn btn-primary">S'inscrire</button>
-    </form>
+            <button type="submit" class="btn btn-success align-self-center">S'inscrire</button>
+        </form>
+    </div>
 
 </body>
 </html>

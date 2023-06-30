@@ -1,6 +1,6 @@
-package ECF3.chessTournament.Service.impl;
+package ECF3.chessTournament.service.impl;
 
-import ECF3.chessTournament.Service.LoginService;
+import ECF3.chessTournament.service.LoginService;
 import ECF3.chessTournament.entity.User;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +30,12 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public boolean isLogged() {
-        return httpSession.getAttribute("isLogged") != null && (boolean)httpSession.getAttribute("isLogged") == true;
+        return (boolean)httpSession.getAttribute("isLogged") == true;
     }
 
     @Override
     public boolean isAdmin() {
-        return httpSession.getAttribute("isLogged") != null && (boolean)httpSession.getAttribute("isAdmin") == true;
+        return (boolean)httpSession.getAttribute("isAdmin") == true;
     }
 
     @Override

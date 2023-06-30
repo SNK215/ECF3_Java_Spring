@@ -1,11 +1,11 @@
 package ECF3.chessTournament.controller;
 
-import ECF3.chessTournament.Exception.GameUnknownException;
-import ECF3.chessTournament.Exception.NotLoggedInException;
-import ECF3.chessTournament.Exception.UserExistsException;
-import ECF3.chessTournament.Exception.UserUnknownException;
-import ECF3.chessTournament.Service.GameService;
-import ECF3.chessTournament.Service.UserService;
+import ECF3.chessTournament.exception.GameUnknownException;
+import ECF3.chessTournament.exception.NotLoggedInException;
+import ECF3.chessTournament.exception.UserExistsException;
+import ECF3.chessTournament.exception.UserUnknownException;
+import ECF3.chessTournament.service.GameService;
+import ECF3.chessTournament.service.UserService;
 import ECF3.chessTournament.entity.Game;
 import ECF3.chessTournament.entity.User;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,15 +35,12 @@ public class MainController {
     @Autowired
     HttpSession httpSession;
 
-    public void displayHeaderButtonsCorrectly(ModelAndView modelAndView){
-        if (httpSession.getAttribute("isLogged") != null) {
+    public void getLoggedStatusForHeaderButtons(ModelAndView modelAndView){
+        if (httpSession.getAttribute("isLogged") != null ) {
             String isLogged = httpSession.getAttribute("isLogged").toString();
             modelAndView.addObject("isLogged",isLogged);
-            String isAdmin = httpSession.getAttribute("isAdmin").toString();
-            modelAndView.addObject("isAdmin", isAdmin);
         } else {
             modelAndView.addObject("isLogged","false");
-            modelAndView.addObject("isAdmin","false");
         }
     }
 
@@ -51,7 +48,7 @@ public class MainController {
     public ModelAndView home() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("homepage");
-        displayHeaderButtonsCorrectly(modelAndView);
+        getLoggedStatusForHeaderButtons(modelAndView);
 
         return modelAndView;
     }
@@ -60,7 +57,7 @@ public class MainController {
     public ModelAndView registerForm() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("registerForm");
-        displayHeaderButtonsCorrectly(modelAndView);
+        getLoggedStatusForHeaderButtons(modelAndView);
 
         return modelAndView;
     }
@@ -71,14 +68,14 @@ public class MainController {
         if (userService.register(firstname, lastname, username, password, false, gameList)) {
             return "redirect:/home/loginForm";
         }
-        return null;
+        return "error";
     }
 
     @GetMapping("/loginForm")
     public ModelAndView loginForm() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("loginForm");
-        displayHeaderButtonsCorrectly(modelAndView);
+        getLoggedStatusForHeaderButtons(modelAndView);
 
         return modelAndView;
     }
@@ -88,7 +85,7 @@ public class MainController {
         if (userService.logIn(username, password)) {
             return "redirect:/home/profilePage";
         }
-        return null;
+        return "error";
     }
 
     @GetMapping("/logoutAction")
@@ -96,46 +93,53 @@ public class MainController {
         if (userService.logOut()) {
             return "redirect:/home/";
         }
-        return null;
+        return "error";
     }
 
     @GetMapping("/profilePage")
-    public ModelAndView profilePage() throws UserUnknownException, NotLoggedInException {
-        int userId = (int)httpSession.getAttribute("userId");
-        User user = userService.findById(userId);
+    public ModelAndView profilePage() throws UserUnknownException, NotLoggedInException, GameUnknownException {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("profilePage");
-        modelAndView.addObject("user", user);
-        displayHeaderButtonsCorrectly(modelAndView);
+        getLoggedStatusForHeaderButtons(modelAndView);
 
-        List<User> userList = userService.findAllOrderdByScore();
-        int userRanking = userList.indexOf(user) + 1;
-        modelAndView.addObject("userRanking", userRanking);
-
-        List<Game> gameList = gameService.findMyGamesNotPlayed(true, user);
-        modelAndView.addObject("gameList", gameList);
-
-        if (httpSession.getAttribute("isLogged").toString().equals("false")) {
-            modelAndView.setViewName("error");
+        if (httpSession.getAttribute("isLogged") == null ) {
+            modelAndView.setViewName("loginForm");
         }
+        else {
+            int userId = (int)httpSession.getAttribute("userId");
+            User user = userService.findById(userId);
+            modelAndView.addObject("user", user);
 
+            List<User> userList = userService.findAllOrderByScore();
+            int userRanking = userList.indexOf(user) + 1;
+            modelAndView.addObject("userRanking", userRanking);
+
+            List<Game> gameList = gameService.findMyGames(true, user);
+            modelAndView.addObject("gameList", gameList);
+            modelAndView.setViewName("profilePage");
+        }
         return modelAndView;
     }
 
     @GetMapping("/gameManagement")
-    public ModelAndView gameManagement() throws NotLoggedInException, UserUnknownException {
+    public ModelAndView gameManagement() throws NotLoggedInException, UserUnknownException, GameUnknownException {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("gameManagement");
-        displayHeaderButtonsCorrectly(modelAndView);
+        getLoggedStatusForHeaderButtons(modelAndView);
 
-        List<User> userList = userService.findAll();
-        modelAndView.addObject("userList", userList);
+        if (httpSession.getAttribute("isLogged") == null ) {
+            modelAndView.setViewName("loginForm");
+        }
+        else {
+            List<User> userList = userService.findAll();
+            modelAndView.addObject("userList", userList);
 
-        int userId = (int) httpSession.getAttribute("userId");
-        User user = userService.findById(userId);
+            int userId = (int) httpSession.getAttribute("userId");
+            User user = userService.findById(userId);
 
-        List<Game> gamesNotPlayed = gameService.findMyGamesNotPlayed(false, user);
-        modelAndView.addObject("gameList", gamesNotPlayed);
+            List<Game> gamesNotPlayed = gameService.findMyGames(false, user);
+            modelAndView.addObject("gameList", gamesNotPlayed);
+
+            modelAndView.setViewName("gameManagement");
+        }
 
         return modelAndView;
     }
@@ -150,7 +154,7 @@ public class MainController {
         if (gameService.createGame(userList)) {
             return "redirect:/home/gameManagement";
         }
-        return null;
+        return "error";
     }
 
     @PostMapping("/setResult")
@@ -174,10 +178,16 @@ public class MainController {
     @GetMapping("/rankings")
     public ModelAndView rankings() throws NotLoggedInException {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("rankings");
-        displayHeaderButtonsCorrectly(modelAndView);
-        List<User> userList = userService.findAllOrderdByScore();
-        modelAndView.addObject("userList", userList);
+        getLoggedStatusForHeaderButtons(modelAndView);
+
+        if (httpSession.getAttribute("isLogged") == null ) {
+            modelAndView.setViewName("loginForm");
+        }
+        else {
+            List<User> userList = userService.findAllOrderByScore();
+            modelAndView.addObject("userList", userList);
+            modelAndView.setViewName("rankings");
+        }
 
         return modelAndView;
     }
