@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+    <title>Inscription</title>
+</head>
+<body>
+    <div th:replace="~{fragments/header.html :: header}"></div>
+
+    <h1>Inscription</h1>
+
+    <form method="post" th:action="@{/home/registerAction}">
+        <div class="form-group">
+            <label for="firstname">Prénom</label>
+            <input type="text" class="form-control" id="firstname" name="firstname">
+        </div>
+
+        <div class="form-group">
+            <label for="lastname">Nom de famille</label>
+            <input type="text" class="form-control" id="lastname" name="lastname">
+        </div>
+
+        <div class="form-group">
+            <label for="username">Nom d'utilisateur</label>
+            <input type="text" class="form-control" id="username" name="username">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input type="password" class="form-control" id="password" name="password">
+        </div>
+
+        <button type="submit" class="btn btn-primary">S'inscrire</button>
+    </form>
+
+</body>
+</html>

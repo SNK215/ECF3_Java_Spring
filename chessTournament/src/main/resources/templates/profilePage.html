@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+    <title>Profil</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header.html::header}"></div>
+
+<div class="d-flex flex-column justify-content-center align-items-center mt-5">
+    <div class="d-flex flex-column justify-content-center">
+        <span th:text="'Prénom : '+${user.getFirstname()}"></span>
+        <span th:text="'Nom : '+${user.getLastname()}"></span>
+        <span th:text="'Nom utilisateur : '+${user.getUsername()}"></span>
+        <span th:text="'Administrateur ? '+${user.isAdmin() ? 'Oui' : 'Non'}"></span>
+    </div>
+
+    <div class="my-5 text-center">
+        <h2 th:text="'Score : '+${user.getScore()+' points'}"></h2>
+        <h4 th:text="'Vous êtes '+${userRanking}+'e au classement général'"></h4>
+    </div>
+
+    <table class="table text-center">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Match</th>
+            <th scope="col">Gagnant</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="game : ${gameList}">
+            <th scope="row" th:text="${game.getId()}"></th>
+            <td th:text="${game.getUserList().get(0).getUsername()}+' vs '+${game.getUserList().get(1).getUsername()}"></td>
+
+            <td th:switch="${game.getResult()}">
+                <span th:case="'A'" th:text="${game.getUserList().get(0).getUsername()}"></span>
+                <span th:case="'B'" th:text="${game.getUserList().get(1).getUsername()}"></span>
+                <span th:case="'N'">Match Null</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
