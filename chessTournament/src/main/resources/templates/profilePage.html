@@ -29,6 +29,7 @@
     </div>
 
     <table class="table text-center">
+        <h3>Vos parties jouées</h3>
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -42,8 +43,8 @@
             <td th:text="${game.getUserList().get(0).getUsername()}+' vs '+${game.getUserList().get(1).getUsername()}"></td>
 
             <td th:switch="${game.getResult()}">
-                <span th:case="'A'" th:text="${game.getUserList().get(0).getUsername()}"></span>
-                <span th:case="'B'" th:text="${game.getUserList().get(1).getUsername()}"></span>
+                <span th:case="'A'" th:text="${game.getUserList().get(0).getUsername() == user.getUsername() ? 'Vous' : game.getUserList().get(0).getUsername()}"></span>
+                <span th:case="'B'" th:text="${game.getUserList().get(1).getUsername() == user.getUsername() ? 'Vous' : game.getUserList().get(1).getUsername()}"></span>
                 <span th:case="'N'">Match Null</span>
             </td>
         </tr>

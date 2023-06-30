@@ -12,10 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.*;
@@ -68,7 +65,7 @@ public class MainController {
         if (userService.register(firstname, lastname, username, password, false, gameList)) {
             return "redirect:/home/loginForm";
         }
-        return "error";
+        return null;
     }
 
     @GetMapping("/loginForm")
@@ -85,7 +82,7 @@ public class MainController {
         if (userService.logIn(username, password)) {
             return "redirect:/home/profilePage";
         }
-        return "error";
+        return null;
     }
 
     @GetMapping("/logoutAction")
@@ -93,7 +90,7 @@ public class MainController {
         if (userService.logOut()) {
             return "redirect:/home/";
         }
-        return "error";
+        return null;
     }
 
     @GetMapping("/profilePage")
@@ -154,7 +151,7 @@ public class MainController {
         if (gameService.createGame(userList)) {
             return "redirect:/home/gameManagement";
         }
-        return "error";
+        return null;
     }
 
     @PostMapping("/setResult")
@@ -192,6 +189,33 @@ public class MainController {
         return modelAndView;
     }
 
+    @ExceptionHandler(UserExistsException.class)
+    public ModelAndView handleUserExist(UserExistsException ex) {
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("message", ex.getMessage());
+        return modelAndView;
+    }
+
+    @ExceptionHandler(UserUnknownException.class)
+    public ModelAndView handleUserExist(UserUnknownException ex) {
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("message", ex.getMessage());
+        return modelAndView;
+    }
+
+    @ExceptionHandler(NotLoggedInException.class)
+    public ModelAndView handleUserExist(NotLoggedInException ex) {
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("message", ex.getMessage());
+        return modelAndView;
+    }
+
+    @ExceptionHandler(GameUnknownException.class)
+    public ModelAndView handleUserExist(GameUnknownException ex) {
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("message", ex.getMessage());
+        return modelAndView;
+    }
 
 
 

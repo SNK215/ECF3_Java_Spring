@@ -10,7 +10,8 @@
 </head>
 <body>
 <div class="d-flex flex-column justify-content-center align-items-center">
-    <h1 class="text-center my-5">Une erreur est survenue</h1>
+    <h1 class="text-center mt-5">Une erreur est survenue</h1>
+    <h2 class="text-center my-5" th:text="${message}"></h2>
     <a th:href="@{/home/}"><button class="btn btn-primary">Retourner vers l'accueil</button></a>
 </div>
 </body>
