@@ -44,7 +44,7 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public ModelAndView home() {
+    public ModelAndView home() throws NotLoggedInException, UserUnknownException {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("homepage");
         getLoggedStatusForHeaderButtons(modelAndView);
@@ -129,6 +129,11 @@ public class MainController {
         }
         else {
             List<User> userList = userService.findAll();
+            for (int i = 0; i < userList.size(); i++) {
+                if (userList.get(i).isAdmin()) {
+                    userList.remove(i);
+                }
+            }
             modelAndView.addObject("userList", userList);
 
             int userId = (int) httpSession.getAttribute("userId");
@@ -147,7 +152,7 @@ public class MainController {
 
 
     @PostMapping("/resetTournament")
-    public String resetTournament() throws NotAdminException {
+    public String resetTournament() throws Exception {
         if (userService.resetScores()) {
             return "redirect:/home/rankings";
         }
@@ -195,6 +200,11 @@ public class MainController {
         }
         else {
             List<User> userList = userService.findAllOrderByScore();
+            for (int i = 0; i < userList.size(); i++) {
+                if (userList.get(i).isAdmin()) {
+                    userList.remove(i);
+                }
+            }
             modelAndView.addObject("userList", userList);
             modelAndView.setViewName("rankings");
         }

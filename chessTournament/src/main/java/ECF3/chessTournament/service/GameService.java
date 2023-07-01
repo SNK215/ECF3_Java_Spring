@@ -1,6 +1,7 @@
 package ECF3.chessTournament.service;
 
 import ECF3.chessTournament.exception.GameUnknownException;
+import ECF3.chessTournament.exception.NotLoggedInException;
 import ECF3.chessTournament.exception.UserExistsException;
 import ECF3.chessTournament.exception.UserUnknownException;
 import ECF3.chessTournament.repository.GameRepository;
@@ -32,6 +33,15 @@ public class GameService {
         }
         catch (Exception e) {
             throw new UserUnknownException();
+        }
+    }
+
+    public List<Game> findByHasBeenPlayed (boolean hasBeenPlayed) throws NotLoggedInException {
+        try {
+            return gameRepository.findByHasBeenPlayed(hasBeenPlayed);
+        }
+        catch (Exception e) {
+            throw new NotLoggedInException();
         }
     }
 

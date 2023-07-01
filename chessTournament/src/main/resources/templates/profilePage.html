@@ -23,33 +23,35 @@
         <span th:text="'Administrateur ? '+${user.isAdmin() ? 'Oui' : 'Non'}"></span>
     </div>
 
-    <div class="my-5 text-center">
-        <h2 th:text="'Score : '+${user.getScore()+' points'}"></h2>
-        <h4 th:text="'Vous êtes '+${userRanking}+'e au classement général'"></h4>
+    <div th:if="${!user.isAdmin()}">
+        <div class="my-5 text-center">
+            <h2 th:text="'Score : '+${user.getScore()+' points'}"></h2>
+            <h4 th:text="'Vous êtes '+${userRanking}+'e au classement général'"></h4>
+        </div>
+
+        <table class="table text-center">
+            <h3>Vos parties jouées</h3>
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Match</th>
+                <th scope="col">Gagnant</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="game : ${gameList}">
+                <th scope="row" th:text="${game.getId()}"></th>
+                <td th:text="${game.getUserList().get(0).getUsername()}+' vs '+${game.getUserList().get(1).getUsername()}"></td>
+
+                <td th:switch="${game.getResult()}">
+                    <span th:case="'A'" th:text="${game.getUserList().get(0).getUsername() == user.getUsername() ? 'Vous' : game.getUserList().get(0).getUsername()}"></span>
+                    <span th:case="'B'" th:text="${game.getUserList().get(1).getUsername() == user.getUsername() ? 'Vous' : game.getUserList().get(1).getUsername()}"></span>
+                    <span th:case="'N'">Match Null</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-
-    <table class="table text-center">
-        <h3>Vos parties jouées</h3>
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Match</th>
-            <th scope="col">Gagnant</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="game : ${gameList}">
-            <th scope="row" th:text="${game.getId()}"></th>
-            <td th:text="${game.getUserList().get(0).getUsername()}+' vs '+${game.getUserList().get(1).getUsername()}"></td>
-
-            <td th:switch="${game.getResult()}">
-                <span th:case="'A'" th:text="${game.getUserList().get(0).getUsername() == user.getUsername() ? 'Vous' : game.getUserList().get(0).getUsername()}"></span>
-                <span th:case="'B'" th:text="${game.getUserList().get(1).getUsername() == user.getUsername() ? 'Vous' : game.getUserList().get(1).getUsername()}"></span>
-                <span th:case="'N'">Match Null</span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
 </div>
 
 </body>
