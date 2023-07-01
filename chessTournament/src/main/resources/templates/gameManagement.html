@@ -14,7 +14,13 @@
 <body>
 <div th:replace="~{fragments/header.html::header}"></div>
 
-<div th:if="${isAdmin == 'true'}" class="d-flex flex-column justify-content-center align-items-center">
+<div th:if="${isAdmin == true}" class="d-flex flex-column justify-content-center align-items-center">
+
+    <div th:if="${isAdmin == true}">
+        <form method="post" th:action="@{/home/resetTournament}">
+            <button type="submit" class="btn btn-danger">Remettre à zéro les scores</button>
+        </form>
+    </div>
 
     <form method="post" th:action="@{/home/gameCreation}" class="w-50 border border-dark rounded my-5 p-3">
         <h3 class="text-center">Nouvelle partie</h3>

@@ -1,5 +1,6 @@
 package ECF3.chessTournament.service;
 
+import ECF3.chessTournament.exception.NotAdminException;
 import ECF3.chessTournament.exception.NotLoggedInException;
 import ECF3.chessTournament.exception.UserExistsException;
 import ECF3.chessTournament.exception.UserUnknownException;
@@ -71,10 +72,15 @@ public class UserService {
     }
 
     public List<User> findAll() throws NotLoggedInException {
-        if(loginService.isLogged()) {
-            return (List<User>) userRepository.findAll();
+        try{
+            if(loginService.isLogged()) {
+                return (List<User>) userRepository.findAll();
+            }
         }
-        throw new NotLoggedInException();
+        catch (Exception e) {
+            throw new NotLoggedInException();
+        }
+        return null;
     }
 
     public List<User> findAllOrderByScore() throws NotLoggedInException {
@@ -83,7 +89,23 @@ public class UserService {
             Collections.sort(userList, Comparator.comparingInt(User::getScore).reversed());
             return userList;
         }
-        throw new NotLoggedInException();
+        else {
+            throw new NotLoggedInException();
+        }
+    }
+
+    public boolean resetScores() throws NotAdminException {
+        if (loginService.isAdmin()) {
+            List<User> userList = (List<User>) userRepository.findAll();
+            for (User u : userList) {
+                u.setScore(0);
+                userRepository.save(u);
+            }
+            return true;
+        }
+        else {
+            throw new NotAdminException();
+        }
     }
 
 }

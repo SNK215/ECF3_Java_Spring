@@ -1,10 +1,8 @@
 package ECF3.chessTournament.controller;
 
-import ECF3.chessTournament.exception.GameUnknownException;
-import ECF3.chessTournament.exception.NotLoggedInException;
-import ECF3.chessTournament.exception.UserExistsException;
-import ECF3.chessTournament.exception.UserUnknownException;
+import ECF3.chessTournament.exception.*;
 import ECF3.chessTournament.service.GameService;
+import ECF3.chessTournament.service.LoginService;
 import ECF3.chessTournament.service.UserService;
 import ECF3.chessTournament.entity.Game;
 import ECF3.chessTournament.entity.User;
@@ -26,6 +24,9 @@ public class MainController {
 
     @Autowired
     private HttpServletResponse response;
+
+    @Autowired
+    LoginService loginService;
 
     @Autowired
     GameService gameService;
@@ -99,7 +100,7 @@ public class MainController {
         ModelAndView modelAndView = new ModelAndView();
         getLoggedStatusForHeaderButtons(modelAndView);
 
-        if (httpSession.getAttribute("isLogged") == null ) {
+        if (!loginService.isLogged()) {
             modelAndView.setViewName("loginForm");
         }
         else {
@@ -123,7 +124,7 @@ public class MainController {
         ModelAndView modelAndView = new ModelAndView();
         getLoggedStatusForHeaderButtons(modelAndView);
 
-        if (httpSession.getAttribute("isLogged") == null ) {
+        if (!loginService.isLogged()) {
             modelAndView.setViewName("loginForm");
         }
         else {
@@ -134,12 +135,23 @@ public class MainController {
             User user = userService.findById(userId);
 
             List<Game> gamesNotPlayed = gameService.findMyGames(false, user);
+
+            modelAndView.addObject("isAdmin",user.isAdmin());
             modelAndView.addObject("gameList", gamesNotPlayed);
 
             modelAndView.setViewName("gameManagement");
         }
 
         return modelAndView;
+    }
+
+
+    @PostMapping("/resetTournament")
+    public String resetTournament() throws NotAdminException {
+        if (userService.resetScores()) {
+            return "redirect:/home/rankings";
+        }
+        return null;
     }
 
     @PostMapping("/gameCreation")
@@ -178,7 +190,7 @@ public class MainController {
         ModelAndView modelAndView = new ModelAndView();
         getLoggedStatusForHeaderButtons(modelAndView);
 
-        if (httpSession.getAttribute("isLogged") == null ) {
+        if (!loginService.isLogged()) {
             modelAndView.setViewName("loginForm");
         }
         else {
@@ -218,6 +230,12 @@ public class MainController {
         return modelAndView;
     }
 
+    @ExceptionHandler(NotAdminException.class)
+    public ModelAndView handleUserExist(NotAdminException ex) {
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("message", ex.getMessage());
+        return modelAndView;
+    }
 
 
 
